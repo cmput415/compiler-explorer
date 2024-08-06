@@ -829,6 +829,17 @@ const definitions: Record<LanguageKey, LanguageDefinition> = {
         previewFilter: /^\s*#include/,
         monacoDisassembly: null,
     },
+    generator: {
+        name: 'Generator',
+        monaco: 'generator',
+        extensions: ['.gen'],
+        alias: [],
+        logoUrl: 'llvm.png',
+        logoUrlDark: null,
+        formatter: null,
+        previewFilter: null,
+        monacoDisassembly: null,
+    },
 };
 
 export const languages = Object.fromEntries(

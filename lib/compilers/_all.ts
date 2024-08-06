@@ -70,6 +70,7 @@ export {FortranCompiler} from './fortran.js';
 export {FPCCompiler} from './pascal.js';
 export {GCCCompiler} from './gcc.js';
 export {GCCRSCompiler} from './gccrs.js';
+export {GeneratorCompiler} from './generator.js';
 export {GCCGimpleCompiler} from './gimple.js';
 export {GCCCobolCompiler} from './gcccobol.js';
 export {GnuCobolCompiler} from './gnucobol.js';
