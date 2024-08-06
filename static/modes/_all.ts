@@ -43,6 +43,7 @@ import './d-mode';
 import './no-highlight-mode';
 import './erlang-mode';
 import './fortran-mode';
+import './generator-mode';
 import './gccdump-rtl-gimple-mode';
 import './haskell-mode';
 import './hlsl-mode';
