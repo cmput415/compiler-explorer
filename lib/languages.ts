@@ -840,6 +840,17 @@ const definitions: Record<LanguageKey, LanguageDefinition> = {
         previewFilter: null,
         monacoDisassembly: null,
     },
+    vcalc: {
+        name: 'VCalc',
+        monaco: 'vcalc',
+        extensions: ['.vcalc'],
+        alias: [],
+        logoUrl: 'llvm.png',
+        logoUrlDark: null,
+        formatter: null,
+        previewFilter: null,
+        monacoDisassembly: null,
+    },
 };
 
 export const languages = Object.fromEntries(

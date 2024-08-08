@@ -89,6 +89,7 @@ export type LanguageKey =
     | 'toit'
     | 'typescript'
     | 'v'
+    | 'vcalc'
     | 'vala'
     | 'vb'
     | 'wasm'
