@@ -62,6 +62,7 @@ import './ptx-mode';
 import './spice-mode';
 import './spirv-mode';
 import './tablegen-mode';
+import './vcalc-mode';
 import './v-mode';
 import './vala-mode';
 import './wat-mode';

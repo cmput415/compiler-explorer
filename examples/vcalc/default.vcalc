@@ -1,0 +1,5 @@
+int i = 1;
+vector v = 1..10;
+
+print(i);
+print(v);
