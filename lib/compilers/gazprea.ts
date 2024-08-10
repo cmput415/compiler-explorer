@@ -24,12 +24,12 @@ import path from 'path';
 import type {CompilationResult, ExecutionOptions} from '../../types/compilation/compilation.interfaces.js';
 import type {PreliminaryCompilerInfo} from '../../types/compiler.interfaces.js';
 import type {ParseFiltersAndOutputOptions} from '../../types/features/filters.interfaces.js';
-import {ldPath, vcalcRuntime} from '../415-env.js';
+import {gazpreaRuntime, ldPath} from '../415-env.js';
 import {BaseCompiler} from '../base-compiler.js';
 
-export class VCalcCompiler extends BaseCompiler {
+export class GazpreaCompiler extends BaseCompiler {
     static get key() {
-        return 'vcalc';
+        return 'gazc';
     }
 
     ccPath: string;
@@ -39,7 +39,7 @@ export class VCalcCompiler extends BaseCompiler {
     constructor(compiler: PreliminaryCompilerInfo, env) {
         super(compiler, env);
 
-        // Paths for running VCalc
+        // Paths for running compiler
         this.ccPath = this.compilerProps<string>(`compiler.${this.compiler.id}.cc`);
 
         // Intermediate files
@@ -54,13 +54,13 @@ export class VCalcCompiler extends BaseCompiler {
         execOptions: ExecutionOptions & {env: Record<string, string>},
         filters?: ParseFiltersAndOutputOptions,
     ): Promise<CompilationResult> {
-        // Prepare VCalc arguments and generate IR file
-        const vcalcArgs = [inputFilename, this.irFile];
-        const vcalcResult = await this.exec(compiler, vcalcArgs, execOptions);
+        // Prepare arguments and generate IR file
+        const gazpreaArgs = [inputFilename, this.irFile];
+        const gazpreaResult = await this.exec(compiler, gazpreaArgs, execOptions);
 
-        if (vcalcResult.code !== 0) {
+        if (gazpreaResult.code !== 0) {
             // Stop early for Compile Time errors
-            return this.transformToCompilationResult(vcalcResult, inputFilename);
+            return this.transformToCompilationResult(gazpreaResult, inputFilename);
         }
 
         // Prepare lli arguments, execution env and get the result
@@ -68,7 +68,7 @@ export class VCalcCompiler extends BaseCompiler {
         const lliExecOptions: ExecutionOptions = {
             ...this.getDefaultExecOptions(),
             ldPath: [ldPath],
-            env: {LD_PRELOAD: path.join(ldPath, vcalcRuntime)},
+            env: {LD_PRELOAD: path.join(ldPath, gazpreaRuntime)},
             customCwd: path.dirname(this.irFile),
         };
         const lliResult = await this.exec('lli', lliArgs, lliExecOptions);
@@ -83,8 +83,8 @@ export class VCalcCompiler extends BaseCompiler {
             ...lliResult,
             code: lliResult.code,
             // Note: Somewhere Compiler Explorer strips the final newline for print programs.
-            stdout: vcalcResult.stdout + lliResult.stdout,
-            stderr: vcalcResult.stderr + lliResult.stderr,
+            stdout: gazpreaResult.stdout + lliResult.stdout,
+            stderr: gazpreaResult.stderr + lliResult.stderr,
         };
 
         return {
@@ -95,7 +95,7 @@ export class VCalcCompiler extends BaseCompiler {
     }
 
     override getCompilerResultLanguageId() {
-        return 'vcalc';
+        return 'gazc';
     }
 
     override optionsForFilter(filters: ParseFiltersAndOutputOptions, outputFilename: any) {
@@ -103,7 +103,7 @@ export class VCalcCompiler extends BaseCompiler {
     }
 
     override getOutputFilename(dirPath: string, outputFilebase: string, key?: any): string {
-        this.outputFile = path.join(dirPath, 'output.vcalc');
+        this.outputFile = path.join(dirPath, 'output.gaz');
         return this.outputFile;
     }
 }

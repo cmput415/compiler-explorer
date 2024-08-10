@@ -43,7 +43,6 @@ import './d-mode';
 import './no-highlight-mode';
 import './erlang-mode';
 import './fortran-mode';
-import './generator-mode';
 import './gccdump-rtl-gimple-mode';
 import './haskell-mode';
 import './hlsl-mode';
@@ -62,8 +61,14 @@ import './ptx-mode';
 import './spice-mode';
 import './spirv-mode';
 import './tablegen-mode';
-import './vcalc-mode';
 import './v-mode';
 import './vala-mode';
 import './wat-mode';
 import './zig-mode';
+
+// 415 Imports
+import './gazprea-mode';
+import './generator-mode';
+import './scalc-mode';
+import './vcalc-mode';
+// import './ga'

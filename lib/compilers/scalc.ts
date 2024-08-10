@@ -14,37 +14,33 @@
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 // ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2023, Compiler Explorer Authors
-// All rights reserved.
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-import * as fs from 'fs';
 import path from 'path';
 
-import type {CompilationResult, ExecutionOptions} from '../../types/compilation/compilation.interfaces.js';
+import {CompilationResult, ExecutionOptions} from '../../types/compilation/compilation.interfaces.js';
 import type {PreliminaryCompilerInfo} from '../../types/compiler.interfaces.js';
 import type {ParseFiltersAndOutputOptions} from '../../types/features/filters.interfaces.js';
-import {ldPath, vcalcRuntime} from '../415-env.js';
 import {BaseCompiler} from '../base-compiler.js';
 
-export class VCalcCompiler extends BaseCompiler {
+export class SCalcCompiler extends BaseCompiler {
     static get key() {
-        return 'vcalc';
+        return 'scalc';
     }
 
     ccPath: string;
-    irFile: string;
     outputFile: string;
 
     constructor(compiler: PreliminaryCompilerInfo, env) {
         super(compiler, env);
-
-        // Paths for running VCalc
         this.ccPath = this.compilerProps<string>(`compiler.${this.compiler.id}.cc`);
-
-        // Intermediate files
-        this.irFile = '/tmp/example.ll';
-        this.outputFile = '/tmp/example.out';
+        this.outputFile = '/tmp/output.scalc';
     }
 
     override async runCompiler(
@@ -55,47 +51,18 @@ export class VCalcCompiler extends BaseCompiler {
         filters?: ParseFiltersAndOutputOptions,
     ): Promise<CompilationResult> {
         // Prepare VCalc arguments and generate IR file
-        const vcalcArgs = [inputFilename, this.irFile];
-        const vcalcResult = await this.exec(compiler, vcalcArgs, execOptions);
-
-        if (vcalcResult.code !== 0) {
-            // Stop early for Compile Time errors
-            return this.transformToCompilationResult(vcalcResult, inputFilename);
-        }
-
-        // Prepare lli arguments, execution env and get the result
-        const lliArgs = [this.irFile];
-        const lliExecOptions: ExecutionOptions = {
-            ...this.getDefaultExecOptions(),
-            ldPath: [ldPath],
-            env: {LD_PRELOAD: path.join(ldPath, vcalcRuntime)},
-            customCwd: path.dirname(this.irFile),
-        };
-        const lliResult = await this.exec('lli', lliArgs, lliExecOptions);
-
-        // Write lli output to the output file
-        if (lliResult.code === 0) {
-            await fs.promises.writeFile(this.outputFile, lliResult.stdout);
-        }
-
-        // Combine results
-        const combinedResult = {
-            ...lliResult,
-            code: lliResult.code,
-            // Note: Somewhere Compiler Explorer strips the final newline for print programs.
-            stdout: vcalcResult.stdout + lliResult.stdout,
-            stderr: vcalcResult.stderr + lliResult.stderr,
-        };
+        const scalcArgs = ['interpreter', inputFilename, this.outputFile];
+        const scalcResult = await this.exec(compiler, scalcArgs, execOptions);
 
         return {
-            ...this.transformToCompilationResult(combinedResult, inputFilename),
+            ...this.transformToCompilationResult(scalcResult, inputFilename),
             languageId: this.getCompilerResultLanguageId(),
             instructionSet: this.getInstructionSetFromCompilerArgs(options),
         };
     }
 
     override getCompilerResultLanguageId() {
-        return 'vcalc';
+        return 'scalc';
     }
 
     override optionsForFilter(filters: ParseFiltersAndOutputOptions, outputFilename: any) {
@@ -103,7 +70,7 @@ export class VCalcCompiler extends BaseCompiler {
     }
 
     override getOutputFilename(dirPath: string, outputFilebase: string, key?: any): string {
-        this.outputFile = path.join(dirPath, 'output.vcalc');
+        this.outputFile = path.join(dirPath, 'output.scalc');
         return this.outputFile;
     }
 }

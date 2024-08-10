@@ -70,7 +70,6 @@ export {FortranCompiler} from './fortran.js';
 export {FPCCompiler} from './pascal.js';
 export {GCCCompiler} from './gcc.js';
 export {GCCRSCompiler} from './gccrs.js';
-export {GeneratorCompiler} from './generator.js';
 export {GCCGimpleCompiler} from './gimple.js';
 export {GCCCobolCompiler} from './gcccobol.js';
 export {GnuCobolCompiler} from './gnucobol.js';
@@ -128,7 +127,6 @@ export {TinyCCompiler} from './tinyc.js';
 export {ToitCompiler} from './toit.js';
 export {TurboCCompiler} from './turboc.js';
 export {TypeScriptNativeCompiler} from './typescript-native.js';
-export {VCalcCompiler} from './vcalc.js';
 export {VCompiler} from './v.js';
 export {ValaCompiler} from './vala.js';
 export {V8Compiler} from './v8.js';
@@ -145,3 +143,9 @@ export {ZigCC} from './zigcc.js';
 export {ZigCompiler} from './zig.js';
 export {ZigCXX} from './zigcxx.js';
 export {z88dkCompiler} from './z88dk.js';
+
+// 415 Compilers
+export {GeneratorCompiler} from './generator.js';
+export {SCalcCompiler} from './scalc.js';
+export {VCalcCompiler} from './vcalc.js';
+export {GazpreaCompiler} from './gazprea.js';

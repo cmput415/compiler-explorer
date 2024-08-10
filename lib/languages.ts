@@ -851,6 +851,28 @@ const definitions: Record<LanguageKey, LanguageDefinition> = {
         previewFilter: null,
         monacoDisassembly: null,
     },
+    scalc: {
+        name: 'SCalc',
+        monaco: 'vcalc',
+        extensions: ['.scalc'],
+        alias: [],
+        logoUrl: 'llvm.png',
+        logoUrlDark: null,
+        formatter: null,
+        previewFilter: null,
+        monacoDisassembly: null,
+    },
+    gazprea: {
+        name: 'Gazprea',
+        monaco: 'gazc',
+        extensions: ['.gaz'],
+        alias: [],
+        logoUrl: 'llvm.png',
+        logoUrlDark: null,
+        formatter: null,
+        previewFilter: null,
+        monacoDisassembly: null,
+    },
 };
 
 export const languages = Object.fromEntries(

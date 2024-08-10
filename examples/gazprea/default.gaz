@@ -1,0 +1,13 @@
+procedure main() returns integer {
+
+    integer i = 0;
+    real r = 3.14;
+
+    i -> std_output;
+
+    '\n' -> std_output;
+    
+    r -> std_output;
+
+    return 0;
+}

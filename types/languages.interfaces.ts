@@ -53,7 +53,6 @@ export type LanguageKey =
     | 'erlang'
     | 'fortran'
     | 'fsharp'
-    | 'generator'
     | 'gimple'
     | 'go'
     | 'haskell'
@@ -89,11 +88,14 @@ export type LanguageKey =
     | 'toit'
     | 'typescript'
     | 'v'
-    | 'vcalc'
     | 'vala'
     | 'vb'
     | 'wasm'
-    | 'zig';
+    | 'zig'
+    | 'generator'
+    | 'vcalc'
+    | 'scalc'
+    | 'gazprea';
 
 export interface Language {
     /** Id of language. Added programmatically based on CELanguages key */
