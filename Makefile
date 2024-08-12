@@ -79,7 +79,7 @@ prebuild: prereqs
 
 .PHONY: run-only
 run-only: node-installed  ## Runs the site like it runs in production without building it
-	env NODE_ENV=production $(NODE) $(NODE_ARGS) ./out/dist/app.js --webpackContent	
+	env NODE_ENV=production $(NODE) $(NODE_ARGS) ./out/dist/app.js --webpackContent ./out/webpack/static $(EXTRA_ARGS)
 
 .PHONY: run
 run:  ## Runs the site like it runs in production
