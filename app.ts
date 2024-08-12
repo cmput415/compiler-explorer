@@ -222,7 +222,7 @@ const defArgs: AppDefaultArguments = {
     rootDir: opts.rootDir || './etc',
     env: opts.env || ['dev'],
     hostname: opts.host,
-    port: opts.port || 10240,
+    port: parseInt(process.env.PORT || '8080', 10),
     gitReleaseName: gitReleaseName,
     releaseBuildNumber: releaseBuildNumber,
     wantedLanguages: opts.language || null,
