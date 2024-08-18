@@ -72,7 +72,6 @@ rules:
   no-useless-computed-key: error
   no-useless-concat: error
   '@typescript-eslint/no-useless-constructor': error
-  no-useless-escape: error
   no-useless-rename: error
   no-useless-return: error
   no-empty:

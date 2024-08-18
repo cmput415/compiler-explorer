@@ -1,0 +1,5 @@
+
+vector v = 1..10;
+
+print(v[1]);
+print(v[3..5]);

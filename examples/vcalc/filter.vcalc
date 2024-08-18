@@ -1,0 +1,4 @@
+
+vector v = [i in 0..20 & (i+1)/2 == i/2];
+
+print(v);

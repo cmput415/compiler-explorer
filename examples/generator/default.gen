@@ -1,5 +1,3 @@
 // Default Generator
 
-[i in 4..4 | i];
-[i in 1..1 | i];
-[i in 5..5 | i];
+[i in 1..10 | i];

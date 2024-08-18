@@ -1,0 +1,8 @@
+
+vector a = 1..5;
+vector b = 3..7;
+
+print(a + b);
+print(a + 2);
+print(a < b);
+print(b + b -2);

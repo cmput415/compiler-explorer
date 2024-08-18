@@ -27,7 +27,6 @@ import $ from 'jquery';
 import * as monaco from 'monaco-editor';
 import * as cpp from 'monaco-editor/esm/vs/basic-languages/cpp/cpp';
 import * as cppp from './cppp-mode.js';
-
 // We need to create a new definition for cpp so we can remove invalid keywords
 
 function definition(): monaco.languages.IMonarchLanguage {
