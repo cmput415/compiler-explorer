@@ -367,7 +367,6 @@ function sandboxFirejail(command: string, args: string[], options: ExecutionOpti
     const jailingOptions = withFirejailTimeout([
         '--quiet',
         '--deterministic-exit-code',
-        '--deterministic-shutdown',
         '--profile=' + getFirejailProfileFilePath('sandbox'),
         `--private=${execPath}`,
         '--private-cwd',
@@ -560,10 +559,7 @@ async function executeWineDirect(command: string, args: string[], options: Execu
 async function executeFirejail(command: string, args: string[], options: ExecutionOptions) {
     options = _.clone(options) || {};
     const firejail = execProps<string>('firejail');
-    const baseOptions = withFirejailTimeout(
-        ['--quiet', '--deterministic-exit-code', '--deterministic-shutdown'],
-        options,
-    );
+    const baseOptions = withFirejailTimeout(['--quiet', '--deterministic-exit-code'], options);
     if (needsWine(command)) {
         logger.debug('WINE execution via firejail', {command, args});
         options.env = applyWineEnv(options.env || {});
@@ -581,6 +577,9 @@ async function executeFirejail(command: string, args: string[], options: Executi
 
     if (options.ldPath) {
         baseOptions.push(`--env=LD_LIBRARY_PATH=${options.ldPath.join(path.delimiter)}`);
+        if (options.env && options.env.LD_PRELOAD) {
+            baseOptions.push(`--env=LD_PRELOAD=${options.env.LD_PRELOAD}`);
+        }
         delete options.ldPath;
     }
 

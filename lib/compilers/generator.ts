@@ -24,9 +24,11 @@
 
 import path from 'path';
 
+import {ExecutionOptions} from '../../types/compilation/compilation.interfaces.js';
 import type {PreliminaryCompilerInfo} from '../../types/compiler.interfaces.js';
 import type {ParseFiltersAndOutputOptions} from '../../types/features/filters.interfaces.js';
 import {BaseCompiler} from '../base-compiler.js';
+import * as exec from '../exec.js';
 
 export class GeneratorCompiler extends BaseCompiler {
     static get key() {
@@ -34,19 +36,24 @@ export class GeneratorCompiler extends BaseCompiler {
     }
 
     ccPath: string;
+    outputFilename: string;
 
     constructor(compiler: PreliminaryCompilerInfo, env) {
         super(compiler, env);
         this.ccPath = this.compilerProps<string>(`compiler.${this.compiler.id}.cc`);
+        this.outputFilename = '';
     }
 
     override getCompilerResultLanguageId() {
         return 'gen';
     }
+    override async exec(filepath: string, args: string[], execOptions: ExecutionOptions) {
+        const generatorArgs = [args[0], this.outputFilename];
+        return await exec.execute(filepath, generatorArgs, execOptions);
+    }
 
     override optionsForFilter(filters: ParseFiltersAndOutputOptions, outputFilename: any) {
-        /// Generator expects <input_file> <output_file>
-        /// First argument is implicitly the input file, so we simply pass the output file through.
+        this.outputFilename = outputFilename;
         return [outputFilename];
     }
 

@@ -1,0 +1,9 @@
+// Loop 
+
+int i = 0;
+
+loop (i < 10)
+    i = i + 1;
+pool;
+
+print(i);

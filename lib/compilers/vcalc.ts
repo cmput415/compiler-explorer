@@ -18,14 +18,15 @@
 // Copyright (c) 2023, Compiler Explorer Authors
 // All rights reserved.
 
-import * as fs from 'fs';
+import fs from 'fs';
 import path from 'path';
 
-import type {CompilationResult, ExecutionOptions} from '../../types/compilation/compilation.interfaces.js';
+import type {ExecutionOptions} from '../../types/compilation/compilation.interfaces.js';
 import type {PreliminaryCompilerInfo} from '../../types/compiler.interfaces.js';
 import type {ParseFiltersAndOutputOptions} from '../../types/features/filters.interfaces.js';
 import {ldPath, vcalcRuntime} from '../415-env.js';
 import {BaseCompiler} from '../base-compiler.js';
+import * as exec from '../exec.js';
 
 export class VCalcCompiler extends BaseCompiler {
     static get key() {
@@ -33,65 +34,34 @@ export class VCalcCompiler extends BaseCompiler {
     }
 
     ccPath: string;
-    irFile: string;
-    outputFile: string;
+    outputFile: string = '';
+    irFile: string = '';
 
     constructor(compiler: PreliminaryCompilerInfo, env) {
         super(compiler, env);
-
-        // Paths for running VCalc
         this.ccPath = this.compilerProps<string>(`compiler.${this.compiler.id}.cc`);
-
-        // Intermediate files
-        this.irFile = '/tmp/example.ll';
-        this.outputFile = '/tmp/example.out';
     }
 
-    override async runCompiler(
-        compiler: string,
-        options: string[],
-        inputFilename: string,
-        execOptions: ExecutionOptions & {env: Record<string, string>},
-        filters?: ParseFiltersAndOutputOptions,
-    ): Promise<CompilationResult> {
-        // Prepare VCalc arguments and generate IR file
-        const vcalcArgs = [inputFilename, this.irFile];
-        const vcalcResult = await this.exec(compiler, vcalcArgs, execOptions);
+    override async exec(filepath: string, args: string[], execOptions: ExecutionOptions) {
+        const vcalcArgs = [args[0], this.irFile];
+        const vcalcResult = await exec.execute(filepath, vcalcArgs, execOptions);
 
-        if (vcalcResult.code !== 0) {
-            // Stop early for Compile Time errors
-            return this.transformToCompilationResult(vcalcResult, inputFilename);
-        }
-
-        // Prepare lli arguments, execution env and get the result
-        const lliArgs = [this.irFile];
-        const lliExecOptions: ExecutionOptions = {
+        const lliExecutionOptions = {
             ...this.getDefaultExecOptions(),
             ldPath: [ldPath],
             env: {LD_PRELOAD: path.join(ldPath, vcalcRuntime)},
             customCwd: path.dirname(this.irFile),
         };
-        const lliResult = await this.exec('lli', lliArgs, lliExecOptions);
+
+        const lliArgs = [this.irFile];
+        const lliResult = await exec.execute('lli', lliArgs, lliExecutionOptions);
 
         // Write lli output to the output file
         if (lliResult.code === 0) {
             await fs.promises.writeFile(this.outputFile, lliResult.stdout);
         }
 
-        // Combine results
-        const combinedResult = {
-            ...lliResult,
-            code: lliResult.code,
-            // Note: Somewhere Compiler Explorer strips the final newline for print programs.
-            stdout: vcalcResult.stdout + lliResult.stdout,
-            stderr: vcalcResult.stderr + lliResult.stderr,
-        };
-
-        return {
-            ...this.transformToCompilationResult(combinedResult, inputFilename),
-            languageId: this.getCompilerResultLanguageId(),
-            instructionSet: this.getInstructionSetFromCompilerArgs(options),
-        };
+        return vcalcResult;
     }
 
     override getCompilerResultLanguageId() {
@@ -103,7 +73,8 @@ export class VCalcCompiler extends BaseCompiler {
     }
 
     override getOutputFilename(dirPath: string, outputFilebase: string, key?: any): string {
-        this.outputFile = path.join(dirPath, 'output.vcalc');
+        this.outputFile = path.join(dirPath, 'vcalc.out');
+        this.irFile = path.join(dirPath, 'vcalc.ll');
         return this.outputFile;
     }
 }

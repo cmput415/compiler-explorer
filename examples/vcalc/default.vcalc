@@ -1,5 +1,13 @@
-int i = 1;
-vector v = 1..10;
+// Default VCalc
 
-print(i);
+vector v = [i in 1..5]
+v = [i in v & i == 4];
+v = [i in v & i == 1];
+v = [i in v & i == 5];
+
+int temp;
+temp = v[1];
+v[1] = v[2]
+v[2] = temp;
+
 print(v);
