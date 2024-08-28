@@ -62,24 +62,6 @@ const plugins: Webpack.WebpackPluginInstance[] = [
         languages: [
             'cpp',
             'go',
-            'pascal',
-            'python',
-            'rust',
-            'swift',
-            'java',
-            'julia',
-            'kotlin',
-            'scala',
-            'ruby',
-            'csharp',
-            'fsharp',
-            'vb',
-            'dart',
-            'typescript',
-            'solidity',
-            'scheme',
-            'objective-c',
-            'elixir',
         ],
         filename: isDev ? '[name].worker.js' : `[name]${webpackJsHack}worker.[contenthash].js`,
     }),
@@ -139,10 +121,10 @@ export default {
         },
     },
     stats: 'normal',
-    devtool: 'source-map',
+    devtool: false,
     optimization: {
         runtimeChunk: 'single',
-        splitChunks: {
+	splitChunks: {
             cacheGroups: {
                 vendors: {
                     test: /[/\\]node_modules[/\\]/,
@@ -151,7 +133,7 @@ export default {
                     priority: -10,
                 },
             },
-        },
+        },	
         moduleIds: 'deterministic',
         minimizer: [
             new CssMinimizerPlugin(),
