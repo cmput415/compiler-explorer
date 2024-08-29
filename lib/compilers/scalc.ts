@@ -47,9 +47,18 @@ export class SCalcCompiler extends BaseCompiler {
     override async exec(filepath: string, args: string[], execOptions: ExecutionOptions) {
         const inputFile = args[0];
         const scalcArgs = ['interpreter', inputFile, this.outputFile];
-        return await exec.execute(filepath, scalcArgs, execOptions);
-    }
+        
+        const execResult = await exec.execute(filepath, scalcArgs, execOptions);
+        
+        // Set custom stdout/err for if the program exection fails
+        if (execResult.code != 0) {
+            execResult.stdout = "";
+            execResult.stderr = "Program Failed."
+        }
 
+        return execResult;
+    }
+    
     override getCompilerResultLanguageId() {
         return 'scalc';
     }

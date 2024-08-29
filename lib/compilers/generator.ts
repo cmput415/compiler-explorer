@@ -49,7 +49,16 @@ export class GeneratorCompiler extends BaseCompiler {
     }
     override async exec(filepath: string, args: string[], execOptions: ExecutionOptions) {
         const generatorArgs = [args[0], this.outputFilename];
-        return await exec.execute(filepath, generatorArgs, execOptions);
+        const execResult = await exec.execute(filepath, generatorArgs, execOptions);
+        
+        // Set custom stdout/err for if the program exection fails
+        if (execResult.code != 0) {
+
+            execResult.stdout = "";
+            execResult.stderr = "Program Failed."
+        }
+
+        return execResult;
     }
 
     override optionsForFilter(filters: ParseFiltersAndOutputOptions, outputFilename: any) {
