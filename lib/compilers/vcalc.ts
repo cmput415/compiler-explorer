@@ -55,6 +55,12 @@ export class VCalcCompiler extends BaseCompiler {
 
         const lliArgs = [this.irFile];
         const lliResult = await exec.execute('lli', lliArgs, lliExecutionOptions);
+         
+        // Set custom stdout/err for if the lli fails
+        if (lliResult.code != 0 || vcalcResult.code != 0) {
+            vcalcResult.stdout = "";
+            vcalcResult.stderr = "Program Failed."
+        }
 
         // Write lli output to the output file
         if (lliResult.code === 0) {
