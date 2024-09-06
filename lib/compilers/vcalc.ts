@@ -42,9 +42,9 @@ export class VCalcCompiler extends BaseCompiler {
         this.ccPath = this.compilerProps<string>(`compiler.${this.compiler.id}.cc`);
     }
 
-    override async exec(filepath: string, args: string[], execOptions: ExecutionOptions) {
+    override async exec(cmd: string, args: string[], execOptions: ExecutionOptions) {
         const vcalcArgs = [args[0], this.irFile];
-        const vcalcResult = await exec.execute(filepath, vcalcArgs, execOptions);
+        const vcalcResult = await exec.execute(cmd, vcalcArgs, execOptions);
 
         const lliExecutionOptions = {
             ...this.getDefaultExecOptions(),
